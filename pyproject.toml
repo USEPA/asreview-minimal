@@ -1,0 +1,142 @@
+[project]
+name = "asreview-minimal"
+description = "Minimal asreview build."
+authors = [
+    { name = "scott-8", email = "13770321+scott-8@users.noreply.github.com" },
+]
+requires-python = ">=3.12,<3.13"
+readme = "README.md"
+license = { text = "Apache 2.0" }
+classifiers = [
+    "Private :: Do not Upload",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+]
+dynamic = ["version"]
+dependencies = ["numpy", "scikit-learn", "scipy"]
+
+[project.urls]
+homepage = "https://github.com/scott-8/asreview-minimal"
+
+
+[project.optional-dependencies]
+sbert = ["sentence_transformers"]
+doc2vec = ["gensim"]
+tensorflow = ["tensorflow~=2.0"]
+all = [
+    "asreview-minimal[sbert]",
+    "asreview-minimal[doc2vec]",
+    "asreview-minimal[tensorflow]",
+]
+
+[project.entry-points."asreview.models.classifiers"]
+svm = "asreview.models.classifiers:SVMClassifier"
+nb = "asreview.models.classifiers:NaiveBayesClassifier"
+rf = "asreview.models.classifiers:RandomForestClassifier"
+nn-2-layer = "asreview.models.classifiers:NN2LayerClassifier"
+logistic = "asreview.models.classifiers:LogisticClassifier"
+lstm-base = "asreview.models.classifiers:LSTMBaseClassifier"
+lstm-pool = "asreview.models.classifiers:LSTMPoolClassifier"
+
+[project.entry-points."asreview.models.feature_extraction"]
+doc2vec = "asreview.models.feature_extraction:Doc2Vec"
+embedding-idf = "asreview.models.feature_extraction:EmbeddingIdf"
+embedding-lstm = "asreview.models.feature_extraction:EmbeddingLSTM"
+sbert = "asreview.models.feature_extraction:SBERT"
+tfidf = "asreview.models.feature_extraction:Tfidf"
+
+[project.entry-points."asreview.models.balance"]
+simple = "asreview.models.balance:SimpleBalance"
+double = "asreview.models.balance:DoubleBalance"
+# triple = "asreview.models.balance:TripleBalance"  # Broken, only via API
+undersample = "asreview.models.balance:UndersampleBalance"
+
+[project.entry-points."asreview.models.query"]
+max = "asreview.models.query.max:MaxQuery"
+random = "asreview.models.query.random:RandomQuery"
+uncertainty = "asreview.models.query.uncertainty:UncertaintyQuery"
+cluster = "asreview.models.query.cluster:ClusterQuery"
+max_random = "asreview.models.query.mixed:MaxRandomQuery"
+max_uncertainty = "asreview.models.query.mixed:MaxUncertaintyQuery"
+
+[tool.hatch.version]
+source = "env"
+variable = "ASREVIEW_VERSION"
+
+[tool.hatch.build]
+only-include = [
+    "src/asreview",
+    "src/asreview_base/asreview/models",
+    "src/asreview_base/asreview/utils.py",
+    "src/asreview_base/asreview/_deprecated.py",
+]
+
+[tool.hatch.build.sources]
+"src/asreview" = "asreview"
+"src/asreview_base" = ""
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pdm]
+
+[tool.pdm.dev-dependencies]
+lint = ["ruff"]
+
+[tool.pdm.scripts]
+# change asreview version here
+_.env = { ASREVIEW_VERSION = "1.6.2", PDM_NO_SELF = "1" }
+
+# standard commands
+install.composite = ["pdm sync --clean"]
+lint.composite = ["ruff check .", "ruff format --check ."]
+format.composite = ["ruff format .", "ruff check . --fix --show-fixes"]
+build.composite = ["pdm build"]
+
+# update asreview tag
+# https://git-scm.com/book/en/v2/Git-Tools-Submodules
+init.cmd = "git submodule update --init --recursive"
+checkout.composite = ["git fetch --tags", "git checkout v${ASREVIEW_VERSION}"]
+checkout.working_dir = "src/asreview_base"
+
+[tool.pyprojectx]
+pdm = ["pdm"]
+
+[tool.pyprojectx.aliases]
+run = "pdm run"
+
+[tool.ruff]
+target-version = "py312"
+preview = true
+extend-exclude = [".pyprojectx", "src/asreview_base"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "ANN",
+    # following rules are redundant with the formatter
+    "W191",
+    "E111",
+    "E114",
+    "E117",
+    "D206",
+    "D300",
+    "Q000",
+    "Q001",
+    "Q002",
+    "Q003",
+    "COM812",
+    "COM819",
+    "ISC001",
+    "ISC002",
+    "E501",
+]
+unfixable = ["F401", "F841"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"**/__init__.py" = ["D104"]
+"test.py" = ["S101"]   
