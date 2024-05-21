@@ -89,10 +89,9 @@ lint = ["ruff"]
 _.env = { ASREVIEW_VERSION = "1.6.2", PDM_NO_SELF = "1" }
 
 # standard commands
-install.composite = ["pdm sync --clean"]
-lint.composite = ["ruff check .", "ruff format --check ."]
-format.composite = ["ruff format .", "ruff check . --fix --show-fixes"]
-build.composite = ["pdm build"]
+check.cmd = "pdm lock --check"
+install.cmd = "pdm sync --clean"
+build.cmd = "pdm build"
 
 # update asreview tag
 # https://git-scm.com/book/en/v2/Git-Tools-Submodules
@@ -101,10 +100,12 @@ checkout.composite = ["git fetch --tags", "git checkout v${ASREVIEW_VERSION}"]
 checkout.working_dir = "src/asreview_base"
 
 [tool.pyprojectx]
-pdm = ["pdm"]
+main = ["pdm==2.15.3", "ruff==0.4.4"]
 
 [tool.pyprojectx.aliases]
 run = "pdm run"
+lint = ["ruff check .", "ruff format --check ."]
+format = ["ruff format .", "ruff check . --fix --show-fixes"]
 
 [tool.ruff]
 target-version = "py312"

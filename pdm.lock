@@ -5,7 +5,7 @@
 groups = ["default", "lint"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:b01d1907380ce7e16997abb860d26b811f7daf6b5be14146ae90b9b09b12a5c6"
+content_hash = "sha256:5bc871ebd43c666f2e155ecc7441630b83cb019e2e54f280917c653f496d0a2c"
 
 [[package]]
 name = "joblib"

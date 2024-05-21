@@ -1,0 +1,53 @@
+name: CI
+
+# Controls when the workflow will run
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  ci-py:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: "pdm.lock"
+      - name: Cache pyprojectx
+        uses: actions/cache@v3
+        with:
+          path: .pyprojectx
+          key: ${{ hashFiles('pyproject.toml') }}-${{ env.pythonLocation }}-pyprojectx
+      - name: Cache Python Dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            .venv
+            __pypackages__
+            ~/.cache/pdm
+            ~/.local/share/pdm/venvs
+          key: deps-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('pdm.lock') }}
+      - name: Check lockfile
+        run: python pw run check
+      - name: Initialize repo
+        run: python pw run init
+      - name: Lint
+        run: python pw lint
+      - name: Build package
+        run: python pw run build
+      - name: Wheel
+        run: pip install dist/*.whl
+      - name: Test
+        run: python test.py
