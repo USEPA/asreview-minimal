@@ -1,0 +1,34 @@
+# file extensions
+*.db
+*.log
+*.pid
+*.py[cod]
+*.sqlite3
+*~
+*.rdb
+
+# files
+.coverage
+.pdm-python
+.env*
+.test*
+.dev*
+
+# folders
+*.egg-info/
+.ipynb_checkpoints/
+.mypy_cache/
+.pytest_cache/
+.vscode/
+.ruff_cache/
+.pipx/
+.pyprojectx/
+__pycache__/
+_build/
+build/
+coverage_html/
+dist/
+node_modules/
+venv/
+.venv/
+.pdm-build/
