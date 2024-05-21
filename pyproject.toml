@@ -81,9 +81,6 @@ build-backend = "hatchling.build"
 
 [tool.pdm]
 
-[tool.pdm.dev-dependencies]
-lint = ["ruff"]
-
 [tool.pdm.scripts]
 # change asreview version here
 _.env = { ASREVIEW_VERSION = "1.6.2", PDM_NO_SELF = "1" }
@@ -95,7 +92,7 @@ build.cmd = "pdm build"
 
 # update asreview tag
 # https://git-scm.com/book/en/v2/Git-Tools-Submodules
-init.cmd = "git submodule update --init --recursive"
+init.cmd = "git submodule update --init"
 checkout.composite = ["git fetch --tags", "git checkout v${ASREVIEW_VERSION}"]
 checkout.working_dir = "src/asreview_base"
 
