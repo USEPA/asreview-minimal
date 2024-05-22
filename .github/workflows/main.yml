@@ -16,22 +16,22 @@ jobs:
   ci-py:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: "pip"
           cache-dependency-path: "pdm.lock"
       - name: Cache pyprojectx
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: .pyprojectx
           key: ${{ hashFiles('pyproject.toml') }}-${{ env.pythonLocation }}-pyprojectx
       - name: Cache Python Dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             .venv
@@ -51,3 +51,50 @@ jobs:
         run: pip install dist/*.whl
       - name: Test
         run: python test.py
+      - name: Save wheel
+        uses: actions/upload-artifact@v3
+        with:
+          name: wheels
+          path: dist/
+
+  release:
+    # https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
+    name: Sign and release package
+    needs:
+      - ci-py
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Download source
+        uses: actions/download-artifact@v3
+        with:
+          name: wheels
+          path: dist/
+      - name: Sign the dists with Sigstore
+        uses: sigstore/gh-action-sigstore-python@v2.1.1
+        with:
+          inputs: >-
+            ./dist/*.tar.gz
+            ./dist/*.whl
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create
+          '${{ github.ref_name }}'
+          --repo '${{ github.repository }}'
+          --notes "Build package using new version of asreview."
+          --latest
+          --verify-tag
+      - name: Upload artifact signatures to GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          gh release upload
+          '${{ github.ref_name }}' dist/**
+          --repo '${{ github.repository }}'
