@@ -96,7 +96,7 @@ checkout.composite = ["git fetch --tags", "git checkout v${ASREVIEW_VERSION}"]
 checkout.working_dir = "src/asreview_base"
 
 [tool.pyprojectx]
-main = ["pdm==2.15.3", "ruff==0.4.4"]
+main = ["pdm==2.22.3", "ruff==0.4.4"]
 
 [tool.pyprojectx.aliases]
 run = "pdm run"
