@@ -79,7 +79,7 @@ only-include = [
 
 [tool.pdm.scripts]
 # change asreview version here
-_.env = { ASREVIEW_VERSION = "1.6.4", PDM_NO_SELF = "1" }
+_.env = { ASREVIEW_VERSION = "1.6.5", PDM_NO_SELF = "1" }
 
 # standard commands
 check.cmd = "pdm lock --check"
