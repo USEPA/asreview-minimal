@@ -81,7 +81,7 @@ only-include = [
 
 [tool.pdm.scripts]
 # change asreview version here
-_.env = { ASREVIEW_VERSION = "1.6.2", PDM_NO_SELF = "1" }
+_.env = { ASREVIEW_VERSION = "1.6.3", PDM_NO_SELF = "1" }
 
 # standard commands
 check.cmd = "pdm lock --check"
@@ -139,7 +139,7 @@ convention = "google"
 
 [tool.ruff.lint.per-file-ignores]
 "**/__init__.py" = ["D104"]
-"test.py" = ["S101"]   
+"test.py" = ["S101"]
 
 [dependency-groups]
 dev = [
