@@ -20,6 +20,8 @@
 .mypy_cache/
 .pytest_cache/
 .vscode/
+.idea/
+.run/
 .ruff_cache/
 .pipx/
 .pyprojectx/
