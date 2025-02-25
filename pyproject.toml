@@ -62,7 +62,7 @@ max_uncertainty = "asreview.models.query.mixed:MaxUncertaintyQuery"
 source = "env"
 variable = "ASREVIEW_VERSION"
 
-[tool.hatch.build]
+[tool.hatch.build.targets.wheel]
 only-include = [
     "src/asreview",
     "src/asreview_base/asreview/models",
@@ -70,11 +70,9 @@ only-include = [
     "src/asreview_base/asreview/_deprecated.py",
 ]
 
-[tool.hatch.build.sources]
+[tool.hatch.build.targets.wheel.sources]
 "src/asreview" = "asreview"
 "src/asreview_base" = ""
-
-
 
 
 [tool.pdm]
