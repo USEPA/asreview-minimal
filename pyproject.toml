@@ -63,16 +63,7 @@ source = "env"
 variable = "ASREVIEW_VERSION"
 
 [tool.hatch.build.targets.wheel]
-only-include = [
-    "src/asreview",
-    "src/asreview_base/asreview/models",
-    "src/asreview_base/asreview/utils.py",
-    "src/asreview_base/asreview/_deprecated.py",
-]
-
-[tool.hatch.build.targets.wheel.sources]
-"src/asreview" = "asreview"
-"src/asreview_base" = ""
+packages = ["src/asreview"]
 
 
 [tool.pdm]
@@ -85,12 +76,6 @@ _.env = { ASREVIEW_VERSION = "1.6.5", PDM_NO_SELF = "1" }
 check.cmd = "pdm lock --check"
 install.cmd = "pdm sync --clean"
 build.cmd = "pdm build"
-
-# update asreview tag
-# https://git-scm.com/book/en/v2/Git-Tools-Submodules
-init.cmd = "git submodule update --init"
-checkout.composite = ["git fetch --tags", "git checkout v${ASREVIEW_VERSION}"]
-checkout.working_dir = "src/asreview_base"
 
 [build-system]
 requires = ["hatchling"]
@@ -107,7 +92,13 @@ format = ["ruff format .", "ruff check . --fix --show-fixes"]
 [tool.ruff]
 target-version = "py312"
 preview = true
-extend-exclude = [".pyprojectx", "src/asreview_base"]
+extend-exclude = [
+    ".pyprojectx",
+    # vendored from asreview v1.6.6
+    "src/asreview/models",
+    "src/asreview/utils.py",
+    "src/asreview/_deprecated.py",
+]
 
 [tool.ruff.lint]
 select = ["ALL"]

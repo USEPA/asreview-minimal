@@ -46,9 +46,6 @@ jobs:
       - name: 'Check lockfile'
         run: python pw run check
 
-      - name: 'Initialize repo'
-        run: python pw run init
-
       - name: 'Lint'
         run: python pw lint
 
