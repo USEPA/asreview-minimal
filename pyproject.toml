@@ -82,7 +82,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.pyprojectx]
-main = ["pdm==2.22.3", "ruff==0.9.7"]
+main = ["pdm==2.22.3", "hishel<0.1", "ruff==0.9.7"]
 
 [tool.pyprojectx.aliases]
 run = "pdm run"
