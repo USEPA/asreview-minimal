@@ -18,6 +18,19 @@ import inspect
 from abc import ABC
 
 import numpy as np
+from sklearn.exceptions import NotFittedError
+from sklearn.utils.validation import check_is_fitted
+
+
+def _wrapped_model_is_fitted(model):
+    """Check whether a wrapped scikit-learn estimator (``self._model``) is fitted."""
+    if model is None:
+        return False
+    try:
+        check_is_fitted(model)
+    except NotFittedError:
+        return False
+    return True
 
 
 def sig_to_param(signature):

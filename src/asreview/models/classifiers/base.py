@@ -14,7 +14,11 @@
 
 __all__ = ["BaseTrainClassifier"]
 
+from sklearn.base import BaseEstimator
+from sklearn.utils import ClassifierTags
+
 from asreview.models.base import BaseModel
+from asreview.models.base import _wrapped_model_is_fitted
 
 
 class BaseTrainClassifier(BaseModel):
@@ -62,6 +66,18 @@ class BaseTrainClassifier(BaseModel):
             columns (class 0, and class 1) and the number of samples rows.
         """
         return self._model.predict_proba(X)
+
+    # scikit-learn >= 1.6 compatibility: the wrapped estimator lives in
+    # self._model, so expose estimator tags and fitted state explicitly.
+    def __sklearn_tags__(self):
+        tags = BaseEstimator.__sklearn_tags__(self)
+        tags.estimator_type = "classifier"
+        tags.classifier_tags = ClassifierTags()
+        tags.target_tags.required = True
+        return tags
+
+    def __sklearn_is_fitted__(self):
+        return _wrapped_model_is_fitted(self._model)
 
     def full_hyper_space(self):
         """Get a hyperparameter space to use with hyperopt.

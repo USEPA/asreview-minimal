@@ -12,7 +12,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 dynamic = ["version"]
-dependencies = ["numpy", "scikit-learn", "scipy"]
+dependencies = ["numpy", "scikit-learn>=1.6,<1.10", "scipy"]
 
 [project.urls]
 homepage = "https://github.com/scott-8/asreview-minimal"
@@ -70,7 +70,7 @@ packages = ["src/asreview"]
 
 [tool.pdm.scripts]
 # change asreview version here
-_.env = { ASREVIEW_VERSION = "1.6.5", PDM_NO_SELF = "1" }
+_.env = { ASREVIEW_VERSION = "1.6.6", PDM_NO_SELF = "1" }
 
 # standard commands
 check.cmd = "pdm lock --check"

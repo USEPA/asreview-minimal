@@ -19,8 +19,11 @@ from abc import abstractmethod
 import numpy as np
 from scipy.sparse import hstack
 from scipy.sparse import issparse
+from sklearn.base import BaseEstimator
+from sklearn.utils import TransformerTags
 
 from asreview.models.base import BaseModel
+from asreview.models.base import _wrapped_model_is_fitted
 
 
 class BaseFeatureExtraction(BaseModel):
@@ -98,6 +101,16 @@ class BaseFeatureExtraction(BaseModel):
             Feature matrix representing the texts.
         """
         raise NotImplementedError
+
+    # scikit-learn >= 1.6 compatibility: the wrapped estimator lives in
+    # self._model, so expose estimator tags and fitted state explicitly.
+    def __sklearn_tags__(self):
+        tags = BaseEstimator.__sklearn_tags__(self)
+        tags.transformer_tags = TransformerTags()
+        return tags
+
+    def __sklearn_is_fitted__(self):
+        return _wrapped_model_is_fitted(getattr(self, "_model", None))
 
     def full_hyper_space(self):
         from hyperopt import hp
